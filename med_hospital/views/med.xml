@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="med_hospital_tree_form_view" model="ir.ui.view">
+            <field name="name">med.hospital.tree.form.view</field>
+            <field name="model">med.hospital.list</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name" />
+                    <field name="cantidad"/>
+                    <!-- <field name="forma" />
+                    <field name="gramaje" />
+                    <field name="tipoGR" /> -->
+                </tree>
+            </field>
+        </record>
+
+        <record id="med_hospital_list_form_view" model="ir.ui.view">
+            <field name="name">med.hospital.list.form.view</field>
+            <field name="model">med.hospital.list</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="name" />
+                            <field name="cantidad"/>
+                            <!-- <field name="forma" />
+                            <field name="gramaje" />
+                            <field name="tipoGR" /> -->
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="med_hospital_list_kanban_view" model="ir.ui.view">  
+            <field name="name">med.hospital.list.kanban.view</field>
+            <field name="model">med.hospital.list</field>
+            <field name="arch" type="xml">
+                <kanban>
+                     <templates>
+                        <t t-name="kanban-box">
+                            <div  t-attf-class="oe_kanban_global_click oe_kanban_card" t-att-data-id="record.id">
+                                <strong><field name="name"/></strong>
+                                <div>
+                                    <field name="cantidad"/>
+                                </div>
+                                <!-- <div>
+                                    <field name="forma"/>
+                                </div>
+                                <div>
+                                    <field name="gramaje"/>
+                                </div>
+                                <div>
+                                    <field name="tipoGR"/>
+                                </div> -->
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="action_med_hospital_list" model="ir.actions.act_window">
+            <field name="name">Medicamentos</field>
+            <field name="res_model">med.hospital.list</field>
+            <field name="view_mode">tree,form,kanban</field>
+        </record>
+
+        <menuitem name="Inventario Medicamentos" id="menu_med_hospital_list" sequence="10" action="action_med_hospital_list"/>
+
+    </data>
+</odoo>

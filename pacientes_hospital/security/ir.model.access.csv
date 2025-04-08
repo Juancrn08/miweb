@@ -1,0 +1,3 @@
+id,name,model_id/id,group_id/id,perm_read,perm_write,perm_create,perm_unlink
+access_pacientes_hospital_manager,pacientes_hospital_manager,model_pacientes_hospital,,1,1,1,1
+access_paciente_medicamento_asignado_manager,paciente_medicamento_asignado_manager,model_paciente_medicamento_asignado,,1,1,1,1
