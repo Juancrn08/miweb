@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api
+from datetime import date
 from odoo.exceptions import ValidationError
 import logging
 logger = logging.getLogger(__name__)
@@ -61,7 +62,8 @@ class PacientesHospital(models.Model):
         'paciente.medicamento_asignado', 
         'paciente_id', 
         string="Medicamentos Activos",
-        domain=[('active', '=', True)]
+        domain=[('active', '=', True)],
+        context={'active_test': False} 
     )
         # Variable para fecha final del tratamiento
     proxima_fecha_fin = fields.Date(
@@ -73,11 +75,10 @@ class PacientesHospital(models.Model):
     @api.depends('medicamento_ids.fecha_fin')
     def _compute_proxima_fecha_fin(self):
         for record in self:
-            active_meds = record.medicamento_ids.filtered(lambda m: m.active)
-            if active_meds:
-                record.proxima_fecha_fin = min(active_meds.mapped('fecha_fin'))
-            else:
-                record.proxima_fecha_fin = False
+            record.proxima_fecha_fin = min(
+                record.medicamento_ids.filtered('active').mapped('fecha_fin'),
+                default=date(2100, 1, 1)  # Valor por defecto lejano
+            ) if record.medicamento_ids else False
 
     def action_ver_medicamentos_activos(self):
         return {
@@ -104,7 +105,20 @@ class PacientesHospital(models.Model):
             record.medicamentos_activos_count = len(record.medicamentos_activos)
             record.medicamento_ids_count = len(record.medicamento_ids)
 
+    show_warning = fields.Boolean(
+        string="Mostrar Alerta",
+        compute='_compute_show_warning',
+        store=True
+    )
 
+    @api.depends('proxima_fecha_fin')
+    def _compute_show_warning(self):
+        today = fields.Date.today()
+        for record in self:
+            record.show_warning = bool(
+                record.proxima_fecha_fin and 
+                record.proxima_fecha_fin < today
+            )
 
 
 
